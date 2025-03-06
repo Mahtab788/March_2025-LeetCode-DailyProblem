@@ -1,0 +1,44 @@
+#.You are given a 0-indexed 2D integer matrix grid of size n * n with values in the range [1, n2]. Each integer appears exactly once except a which appears twice and b which is missing. 
+The task is to find the repeating and missing numbers a and b.
+
+Return a 0-indexed integer array ans of size 2 where ans[0] equals to a and ans[1] equals to b.
+
+
+class Solution {
+    public int[] findMissingAndRepeatedValues(int[][] grid) {
+        int n = grid.length;
+        int N = n * n;
+        
+        // Expected sum and sum of squares
+        long expectedSum = (long) N * (N + 1) / 2;
+        long expectedSquareSum = (long) N * (N + 1) * (2 * N + 1) / 6;
+
+        // Actual sum and sum of squares
+        long actualSum = 0, actualSquareSum = 0;
+        int repeating = -1;
+
+        int[] freq = new int[N + 1]; // Frequency array to track duplicates
+        
+        for (int[] row : grid) {
+            for (int num : row) {
+                actualSum += num;
+                actualSquareSum += (long) num * num;
+                freq[num]++;
+                
+                if (freq[num] == 2) {
+                    repeating = num; // Found the repeating number
+                }
+            }
+        }
+        
+        // Compute missing number
+        long sumDiff = expectedSum - actualSum; // b - a
+        long squareSumDiff = expectedSquareSum - actualSquareSum; // b^2 - a^2
+        
+        long sumAB = squareSumDiff / sumDiff; // (b + a)
+        int missing = (int) ((sumAB + sumDiff) / 2);
+        
+        return new int[]{repeating, missing};
+    }
+}
+ 
