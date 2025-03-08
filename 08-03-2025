@@ -1,0 +1,23 @@
+#.2379. Minimum Recolors to Get K Consecutive Black Blocks.
+
+class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int minOperations = Integer.MAX_VALUE;
+        int whiteCount = 0;
+        
+        // Sliding window of size k
+        for (int i = 0; i < blocks.length(); i++) {
+            // Count white blocks in the current window
+            if (blocks.charAt(i) == 'W') whiteCount++;
+            
+            // Once the window size reaches k, start sliding
+            if (i >= k - 1) {
+                minOperations = Math.min(minOperations, whiteCount);
+                
+                // Slide the window, remove the leftmost block if it was white
+                if (blocks.charAt(i - k + 1) == 'W') whiteCount--;
+            }
+        }
+        return minOperations;
+    }
+}
