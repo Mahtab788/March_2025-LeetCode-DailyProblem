@@ -1,0 +1,24 @@
+#.2226. Maximum Candies Allocated to K Children.
+
+class Solution {
+    public int maximumCandies(int[] candies, long k) {
+        int left = 1, right = (int)1e7, result = 0;
+
+        // Binary search on max candies per child
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            long count = 0;
+            
+            // Count how many children can get 'mid' candies
+            for (int c : candies) count += c / mid;
+            
+            if (count >= k) {  // Possible to allocate
+                result = mid;
+                left = mid + 1;  // Try to increase
+            } else {
+                right = mid - 1; // Decrease limit
+            }
+        }
+        return result;
+    }
+}
