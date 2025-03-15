@@ -1,0 +1,34 @@
+#.2560. House Robber IV.
+
+class Solution {
+    public int minCapability(int[] nums, int k) {
+        int left = 1, right = (int) 1e9; // The range of possible house values
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+
+            if (canRobAtLeastK(nums, k, mid)) {
+                right = mid; // Try a smaller maximum capability
+            } else {
+                left = mid + 1; // Increase the capability if k houses cannot be robbed
+            }
+        }
+
+        return left;
+    }
+
+    private boolean canRobAtLeastK(int[] nums, int k, int capability) {
+        int count = 0;
+        int i = 0;
+        
+        while (i < nums.length) {
+            if (nums[i] <= capability) { // If the house can be robbed
+                count++;
+                i++; // Skip adjacent house
+            }
+            i++; // Move to the next house
+        }
+        
+        return count >= k;
+    }
+}
