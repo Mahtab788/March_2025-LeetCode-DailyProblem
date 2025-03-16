@@ -1,0 +1,31 @@
+#.2594. Minimum Time to Repair Cars.
+import java.util.Arrays;
+
+class Solution {
+    public long repairCars(int[] ranks, int cars) {
+        long left = 1, right = (long) ranks[0] * cars * cars, ans = right;
+        
+        Arrays.sort(ranks); // Sorting mechanics' ranks for efficient allocation
+        
+        while (left <= right) {
+            long mid = left + (right - left) / 2;
+            if (canRepairAll(ranks, cars, mid)) {
+                ans = mid;
+                right = mid - 1; // Try to minimize time
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    private boolean canRepairAll(int[] ranks, int cars, long time) {
+        int repaired = 0;
+        for (int rank : ranks) {
+            long maxCars = (long) Math.sqrt(time / rank); // Solve n² ≤ time/rank
+            repaired += maxCars;
+            if (repaired >= cars) return true;
+        }
+        return false;
+    }
+}
