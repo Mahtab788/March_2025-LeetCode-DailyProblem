@@ -1,0 +1,23 @@
+#.2401. Longest Nice Subarray.
+
+class Solution {
+    public int longestNiceSubarray(int[] nums) {
+        int left = 0, bitMask = 0, maxLength = 0;
+
+        for (int right = 0; right < nums.length; right++) {
+            // Ensure the new element doesn't break the "nice" condition
+            while ((bitMask & nums[right]) != 0) {
+                bitMask ^= nums[left]; // Remove nums[left] from bitMask
+                left++; // Shrink the window
+            }
+            
+            // Add current number to bitMask
+            bitMask |= nums[right];
+
+            // Update maxLength
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+}
