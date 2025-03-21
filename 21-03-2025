@@ -1,0 +1,43 @@
+#.2115. Find All Possible Recipes from Given Supplies.
+
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        Map<String, Integer> inDegree = new HashMap<>();
+        Map<String, List<String>> graph = new HashMap<>();
+        Set<String> available = new HashSet<>(Arrays.asList(supplies));
+        
+        // Initialize graph and in-degree count
+        for (int i = 0; i < recipes.length; i++) {
+            String recipe = recipes[i];
+            inDegree.put(recipe, ingredients.get(i).size());  // Count required ingredients
+            
+            for (String ing : ingredients.get(i)) {
+                graph.computeIfAbsent(ing, k -> new ArrayList<>()).add(recipe);
+            }
+        }
+
+        // Process available supplies using BFS (Kahn's Algorithm)
+        Queue<String> queue = new LinkedList<>(available);
+        List<String> result = new ArrayList<>();
+        
+        while (!queue.isEmpty()) {
+            String item = queue.poll();
+            
+            if (inDegree.containsKey(item) && inDegree.get(item) == 0) {
+                result.add(item);  // Recipe can be made
+            }
+
+            if (graph.containsKey(item)) {
+                for (String dependentRecipe : graph.get(item)) {
+                    inDegree.put(dependentRecipe, inDegree.get(dependentRecipe) - 1);
+                    
+                    if (inDegree.get(dependentRecipe) == 0) {
+                        queue.offer(dependentRecipe);
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+}
