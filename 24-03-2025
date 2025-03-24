@@ -1,0 +1,30 @@
+#.3169. Count Days Without Meetings.
+
+import java.util.*;
+
+class Solution {
+    public int countDays(int days, int[][] meetings) {
+        // Step 1: Sort the meetings by start time
+        Arrays.sort(meetings, Comparator.comparingInt(a -> a[0]));
+        
+        int busyDays = 0, prevEnd = 0;
+        
+        // Step 2: Merge overlapping intervals and count occupied days
+        for (int[] meeting : meetings) {
+            int start = meeting[0], end = meeting[1];
+
+            // If there's a gap between previous meeting and current meeting
+            if (start > prevEnd + 1) {
+                busyDays += (end - start + 1);
+            } else if (end > prevEnd) {
+                busyDays += (end - prevEnd);
+            }
+            
+            // Update last meeting end time
+            prevEnd = Math.max(prevEnd, end);
+        }
+        
+        // Step 3: Calculate available (free) days
+        return days - busyDays;
+    }
+}
