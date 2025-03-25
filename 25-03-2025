@@ -1,0 +1,80 @@
+#.3394. Check if Grid can be Cut into Sections.
+import java.util.*;
+
+class Solution {
+    public boolean checkValidCuts(int n, int[][] rectangles) {
+        // Check for Horizontal Cuts
+        Set<Integer> yCuts = new HashSet<>();
+        for (int[] rect : rectangles) {
+            yCuts.add(rect[1]); // starty
+            yCuts.add(rect[3]); // endy
+        }
+        
+        List<Integer> yList = new ArrayList<>(yCuts);
+        Collections.sort(yList);
+        
+        // Try to divide using horizontal cuts
+        for (int i = 0; i < yList.size() - 1; i++) {
+            int y1 = yList.get(i);
+            int y2 = yList.get(i + 1);
+            
+            if (isValidHorizontalCut(rectangles, y1, y2)) {
+                return true;
+            }
+        }
+        
+        // Check for Vertical Cuts
+        Set<Integer> xCuts = new HashSet<>();
+        for (int[] rect : rectangles) {
+            xCuts.add(rect[0]); // startx
+            xCuts.add(rect[2]); // endx
+        }
+        
+        List<Integer> xList = new ArrayList<>(xCuts);
+        Collections.sort(xList);
+        
+        // Try to divide using vertical cuts
+        for (int i = 0; i < xList.size() - 1; i++) {
+            int x1 = xList.get(i);
+            int x2 = xList.get(i + 1);
+            
+            if (isValidVerticalCut(rectangles, x1, x2)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean isValidHorizontalCut(int[][] rectangles, int y1, int y2) {
+        boolean belowY1 = false, betweenY1Y2 = false, aboveY2 = false;
+        
+        for (int[] rect : rectangles) {
+            if (rect[3] <= y1) {
+                belowY1 = true;
+            } else if (rect[1] >= y2) {
+                aboveY2 = true;
+            } else {
+                betweenY1Y2 = true;
+            }
+        }
+        
+        return belowY1 && betweenY1Y2 && aboveY2;
+    }
+    
+    private boolean isValidVerticalCut(int[][] rectangles, int x1, int x2) {
+        boolean leftOfX1 = false, betweenX1X2 = false, rightOfX2 = false;
+        
+        for (int[] rect : rectangles) {
+            if (rect[2] <= x1) {
+                leftOfX1 = true;
+            } else if (rect[0] >= x2) {
+                rightOfX2 = true;
+            } else {
+                betweenX1X2 = true;
+            }
+        }
+        
+        return leftOfX1 && betweenX1X2 && rightOfX2;
+    }
+}
