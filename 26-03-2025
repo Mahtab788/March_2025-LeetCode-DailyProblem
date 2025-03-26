@@ -1,0 +1,39 @@
+#.2033. Minimum Operations to Make a Uni-Value Grid.
+
+class Solution {
+    public int minOperations(int[][] grid, int x) {
+        // Flatten the grid into a single list of elements
+        List<Integer> elements = new ArrayList<>();
+        for (int[] row : grid) {
+            for (int num : row) {
+                elements.add(num);
+            }
+        }
+
+        // Step 1: Check if it's possible to make the grid uni-value
+        int remainder = elements.get(0) % x;
+        for (int num : elements) {
+            if (num % x != remainder) {
+                return -1; // If any element has a different remainder when divided by x, return -1
+            }
+        }
+
+        // Step 2: Normalize the elements by dividing them by x
+        List<Integer> normalizedElements = new ArrayList<>();
+        for (int num : elements) {
+            normalizedElements.add((num - remainder) / x);
+        }
+
+        // Step 3: Find the median of the normalized elements
+        Collections.sort(normalizedElements);
+        int median = normalizedElements.get(normalizedElements.size() / 2);
+
+        // Step 4: Calculate the number of operations needed to make all elements equal to the median
+        int operations = 0;
+        for (int num : normalizedElements) {
+            operations += Math.abs(num - median);
+        }
+
+        return operations;
+    }
+}
